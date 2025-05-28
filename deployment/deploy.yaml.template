@@ -1,9 +1,26 @@
-# Frontend Deployment
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: ${namespace}
+data:
+  runtime-env.js: |
+    window.__runtime_config__ = {
+        MEMBER_URL: 'http://dg0400.20.214.196.128.nip.io/api/auth',
+        MYSUB_URL: 'http://dg0400.20.214.196.128.nip.io/api/mysub',
+        RECOMMEND_URL: 'http://dg0400.20.214.196.128.nip.io/api/recommend'
+    };
+
+---
+# Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: lifesub-web
   namespace: ${namespace}
+  labels:
+    app: lifesub-web
 spec:
   replicas: ${replicas}
   selector:
@@ -14,6 +31,8 @@ spec:
       labels:
         app: lifesub-web
     spec:
+      imagePullSecrets:
+      - name: acr-secret
       containers:
       - name: lifesub-web
         image: ${lifesub_web_image_path}
@@ -27,18 +46,29 @@ spec:
           limits:
             cpu: ${resources_limits_cpu}
             memory: ${resources_limits_memory}
+        volumeMounts:
+        - name: runtime-config
+          mountPath: /usr/share/nginx/html/runtime-env.js
+          subPath: runtime-env.js
+      volumes:
+      - name: runtime-config
+        configMap:
+          name: frontend-config
 
 ---
-# Frontend Service
+# Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: lifesub-web
+  name: lifesub-web-service
   namespace: ${namespace}
-spec:
-  selector:
+  labels:
     app: lifesub-web
+spec:
+  type: LoadBalancer
   ports:
   - port: 80
     targetPort: ${export_port}
-  type: LoadBalancer
+    protocol: TCP
+  selector:
+    app: lifesub-web
