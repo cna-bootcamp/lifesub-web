@@ -1,8 +1,10 @@
-# lifesub-web/deployment/manifest/deployments/hiondal-web-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: lifesub-web
+  namespace: dg0400-lifesub-ns
+  labels:
+    app: lifesub-web
 spec:
   replicas: 1
   selector:
@@ -14,10 +16,10 @@ spec:
         app: lifesub-web
     spec:
       imagePullSecrets:
-      - name: dockerhub
+      - name: acr-secret
       containers:
       - name: lifesub-web
-        image: dg0200cr.azurecr.io/lifesub/lifesub-web:1.0.0
+        image: acrdigitalgarage01.azurecr.io/dg0400/lifesub-web:1.0.0
         imagePullPolicy: Always
         ports:
         - containerPort: 18080
@@ -28,4 +30,11 @@ spec:
           limits:
             cpu: 1024m
             memory: 1024Mi
-            
+        volumeMounts:
+        - name: runtime-config
+          mountPath: /usr/share/nginx/html/runtime-env.js
+          subPath: runtime-env.js
+      volumes:
+      - name: runtime-config
+        configMap:
+          name: frontend-config

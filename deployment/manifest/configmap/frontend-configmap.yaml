@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: dg0400-lifesub-ns
+data:
+  runtime-env.js: |
+    window.__runtime_config__ = {
+        MEMBER_URL: 'http://dg0400.20.214.196.128.nip.io/api/auth',
+        MYSUB_URL: 'http://dg0400.20.214.196.128.nip.io/api/mysub',
+        RECOMMEND_URL: 'http://dg0400.20.214.196.128.nip.io/api/recommend'
+    };

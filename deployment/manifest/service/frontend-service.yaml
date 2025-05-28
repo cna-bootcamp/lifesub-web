@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lifesub-web-service
+  namespace: dg0400-lifesub-ns
+  labels:
+    app: lifesub-web
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 18080
+    protocol: TCP
+  selector:
+    app: lifesub-web
