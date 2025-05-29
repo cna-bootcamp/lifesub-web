@@ -44,7 +44,7 @@ podTemplate(
                 withSonarQubeEnv('SonarQube') {
                     sh """
                         ${sonarScannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=lifesub-web-lifesub-web-dg0400 \
+                        -Dsonar.projectKey=lifesub-web-dg0400 \
                         -Dsonar.sources=src \
                         -Dsonar.tests=src \
                         -Dsonar.test.inclusions=src/**/*.test.js,src/**/*.test.jsx \
@@ -105,6 +105,7 @@ podTemplate(
                     export lifesub_web_image_path=${props.registry}/${props.image_org}/lifesub-web:${imageTag}
                     export replicas=${props.replicas}
                     export export_port=${props.export_port}
+                    export ingress_host=${props.ingress_host}
                     export resources_requests_cpu=${props.resources_requests_cpu}
                     export resources_requests_memory=${props.resources_requests_memory}
                     export resources_limits_cpu=${props.resources_limits_cpu}
@@ -126,7 +127,6 @@ podTemplate(
                     echo "Waiting for service external IP..."
                     while [[ -z \$(kubectl -n ${namespace} get svc lifesub-web-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}') ]]; do
                         sleep 5
-                        echo "Still waiting for external IP assignment..."
                     done
                     echo "Service external IP: \$(kubectl -n ${namespace} get svc lifesub-web-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
                 """

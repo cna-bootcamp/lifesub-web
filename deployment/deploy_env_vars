@@ -10,6 +10,7 @@ image_org=dg0400
 # Application Settings
 replicas=1
 export_port=18080
+ingress_host=dg0400.20.214.196.128.nip.io
 
 # Resource Settings
 resources_requests_cpu=256m

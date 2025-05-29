@@ -7,9 +7,9 @@ metadata:
 data:
   runtime-env.js: |
     window.__runtime_config__ = {
-        MEMBER_URL: 'http://dg0400.20.214.196.128.nip.io/api/auth',
-        MYSUB_URL: 'http://dg0400.20.214.196.128.nip.io/api/mysub',
-        RECOMMEND_URL: 'http://dg0400.20.214.196.128.nip.io/api/recommend'
+        MEMBER_URL: 'http://${ingress_host}/api/auth',
+        MYSUB_URL: 'http://${ingress_host}/api/mysub',
+        RECOMMEND_URL: 'http://${ingress_host}/api/recommend'
     };
 
 ---
